@@ -1,0 +1,28 @@
+{% extends "home/base.html" %}
+
+{% block head_title %}
+    {{ title }} | {{ block.super }}
+{% endblock head_title %}
+
+{% block page %}
+
+<div class="jumbotron text-center" style="margin-bottom:0px">
+  <h1>Schedule</h1> 
+  <p>Here you can find information about times when tutors are on duty
+      We are working on this right now. Come back soon!
+  </p>
+</div>
+{% comment %}<div style="padding:50px; border: 50px solid #eee" id='calendar'></div>
+
+<script>
+    $(document).ready(function() {
+
+        // page is now ready, initialize the calendar...
+
+        $('#calendar').fullCalendar({
+            // put your options and callbacks here
+        })
+
+    });
+</script>{% endcomment %}
+{% endblock page %}

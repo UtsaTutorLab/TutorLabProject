@@ -1,0 +1,102 @@
+{% extends "tutor_admin/base.html" %}
+{% block page %}
+<script> function print_report() {
+            window.location.href = './tutor_report';
+         }
+</script>
+<!-- WELCOME CONTAINER -->
+<div class="jumbotron text-center">
+  <h1>Tutor Admin</h1>
+  <h3>Welcome {{request.user.get_full_name}}</h3>
+</div>
+<div class="container-fluid">
+  <div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 style="margin:5px;">Courses</h3>
+        <div class="btn-group pull-right" style="margin-top:-35px;">
+            <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false" style="border-top-right-radius:5px; border-bottom-right-radius:5px">
+              <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a data-toggle="modal" data-target="#add_students">
+                <span class="glyphicon glyphicon-plus" style="margin-right:5px;"></span>Add Students to Classes</a></li>
+              <li><a data-toggle="modal" data-target="#create_question_set">
+                <span class="glyphicon glyphicon-list-alt" style="margin-right:5px;"></span>Create Question Set</a></li>
+            </ul>
+          </div>
+      </div>
+      <div class="panel-body">
+        {% for course in courses %}
+          <a href="#" onclick="get_students('{{course}}', '{{course.id}}', '{{course.course_num}}')"> {{ course }} </a><br>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 id="student-title" style="margin:5px;">Students</h3>
+        <a class="btn btn-primary pull-right" href="{% url 'forum:forum' %}" style="margin:-35px 0px 0px;">Student Forum</a>
+      </div>
+      <div class="panel-body">
+          {% comment %}<h4>Students in the class</h4>{% endcomment %}
+          <ul id="student-list-ul" style="padding: 0px">
+          </ul>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default" id="tutor-list-panel">
+        <div class="panel-heading"><h3 style="margin:5px;">Tutors</h3>
+          <div class="btn-group pull-right" style="margin-top:-35px;">
+            <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false" style="border-top-right-radius:5px; border-bottom-right-radius:5px">
+              <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a data-toggle="modal" data-target="#create_tutor">
+                <span class="glyphicon glyphicon-plus" style="margin-right:5px;"></span>Add Tutor</a></li>
+              <li><a data-toggle="modal" data-target="#create_notification">
+                <span class="glyphicon glyphicon-envelope" style="margin-right:5px;"></span>Send Notification</a></li>
+              <li><a data-toggle="modal" data-target="#generate_report">
+                <span class="glyphicon glyphicon-file" style="margin-right:5px;"></span>Generate Tutor Report</a></li>
+              <li><a data-toggle="modal" data-target="#edit_survey_questions">
+                <span class="glyphicon glyphicon-list-alt" style="margin-right:5px;"></span>Edit Survey Questions</a></li>
+              <li><a data-toggle="modal" data-target="#edit_terms">
+                <span class="glyphicon glyphicon-calendar" style="margin-right:5px;"></span>Manage Terms</a></li>
+              <li><a data-toggle="modal" data-target="#edit_issue_list">
+                <span class="glyphicon  glyphicon-list" style="margin-right:5px;"></span>Edit Issue List</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <u><h4>Name</h4></u>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <u><h4>Last Login</h4></u>
+            </div>
+          </div>
+          <ul style="padding:0px;">
+            {% for tutor in tutor_list %}
+            <div class="row">
+              <div class="col-xs-6 col-md-6">
+                <a href="{% url 'tutor_admin:tutor' id=tutor.pk %}"><lu>{{ tutor }}</lu></a>
+              </div>
+              <div class="col-xs-6 col-md-6">
+                <lu>{{ tutor.tutor.last_login }}</lu><br>
+              </div> 
+            </div>   
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

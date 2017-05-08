@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Welcome to The Forum</title>
+
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<!-- Custom styles for this template -->
+	<link href="{% static 'css/personal.css' %}" rel="stylesheet">
+    <script src="{% static 'js/personal.js' %}"></script>
+	<script src="{% static 'js/forum.js' %}"></script>
+	
+	<!-- PUSHER JS -->
+	{% load pusherable_tags %}
+	<script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+	<script src="{% static 'js/queue.js' %}"></script>
+	
+</head>
+<!--====================================================-->
+
+<body>
+	<!-- HEADER NAV BAR -->
+	{% block header %} 
+		{% include "home/includes/header.html" %} 
+	{% endblock %}
+
+	<!-- MODAL CONTENT -->
+	{% block modal %}
+		{% include "forum/includes/modal.html" %}
+	{% endblock modal %}
+
+	<!-- PROFILE CONTENT -->
+	{% block page %} 
+    
+    {% endblock page %}
+
+</body>
+
+</html>

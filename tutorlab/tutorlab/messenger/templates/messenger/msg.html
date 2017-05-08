@@ -1,0 +1,127 @@
+{% extends "messenger/base.html" %}
+{% block page %}
+{% load staticfiles %}
+
+<div class="container-fluid" style="background:white; padding-top:75px;">
+  {% comment %}<div class="row">
+    <div class="col-md-offset-3 col-md-6 col-xs-12">
+      <h1 style="text-align:center"> Welcome to Tutor Chat! </h1>
+    </div>
+  </div>{% endcomment %}
+  
+  <div class="row">
+    <div class="col-md-12 col-xs-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span class="glyphicon glyphicon-comment"></span> Tutor Chat
+           {% if isTutor %}
+                <a class="btn btn-danger pull-right" style="margin-top: -7px;" href="{% url 'ta_tutor:ta_tutor' %}"> End Session </a>
+            {% else %}
+                <a class="btn btn-danger pull-right" style="margin-top: -7px;" href="{% url 'student:student' %}"> End Session </a>
+            {% endif %}
+        </div>
+        <div class="panel-body" id="chatbody" style="max-height:450px; min-height:450px; overflow-y: scroll;">
+          <table id="chat">
+            <!-- Chat messages appear here -->
+          </table>
+        </div>
+        <div class="panel-footer">
+          <form id="chatform">
+            <input id="message" type="text" style="width:80%" placeholder="Press Enter to Send" autocomplete="off">
+            <button class="btn btn-primary" type="submit">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- EXAMPLE CHAT PANEL -->
+<!--<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12" style="width:100%;">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-comment"></span> Tutor Chat
+                </div>
+
+                <div class="panel-body">
+                    <ul class="chat">
+                        <li class="left clearfix"><span class="chat-img pull-left">
+                            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+                        </span>
+                            <div class="chat-body clearfix">
+                                <div class="header">
+                                    <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
+                                        <span class="glyphicon glyphicon-time"></span>12 mins ago</small>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                                    dolor, quis ullamcorper ligula sodales.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="right clearfix"><span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+                        </span>
+                            <div class="chat-body clearfix">
+                                <div class="header">
+                                    <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
+                                    <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                                    dolor, quis ullamcorper ligula sodales.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="left clearfix"><span class="chat-img pull-left">
+                            <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+                        </span>
+                            <div class="chat-body clearfix">
+                                <div class="header">
+                                    <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
+                                        <span class="glyphicon glyphicon-time"></span>14 mins ago</small>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                                    dolor, quis ullamcorper ligula sodales.
+                                </p>
+                            </div>
+                        </li>
+                        <li class="right clearfix"><span class="chat-img pull-right">
+                            <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+                        </span>
+                            <div class="chat-body clearfix">
+                                <div class="header">
+                                    <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>15 mins ago</small>
+                                    <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                                    dolor, quis ullamcorper ligula sodales.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                Send</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<script type="text/javascript" src='{% static "js/reconnecting-websocket.min.js" %}'></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script type="text/javascript" src='{% static "js/messenger.js" %}'></script>
+{% endblock page %}

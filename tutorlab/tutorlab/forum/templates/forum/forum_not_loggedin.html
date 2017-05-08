@@ -1,0 +1,9 @@
+{% extends "forum/base.html" %} 
+{% load staticfiles %} 
+{% block page %}
+<div class="jumbotron text-center" style="margin-top:50px">
+  <h1>Welcome to The Forum</h1> 
+  <p>You are not logged in to view this page! Please log in to see the forum or if you do not have an account you can create one for free!</p>
+  <a class="btn btn-default" href="{% url 'home:home' %}"><span class="glyphicon glyphicon-chevron-left"></span>Go to Home Page</a>
+</div>
+{% endblock page %}

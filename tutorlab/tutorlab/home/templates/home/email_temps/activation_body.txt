@@ -1,0 +1,4 @@
+Dear {{username}}
+Your account has been created. Please follow the link below to activate your account.
+Your abc123 will be your username and you will set your password on activation of your account.
+http{% if secure %}s{% endif %}://{{ site.domain }}/instructor/activate-account/{{ token }}

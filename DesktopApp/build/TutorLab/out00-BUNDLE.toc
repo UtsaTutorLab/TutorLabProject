@@ -1,0 +1,3 @@
+([('TutorLab',
+   '/Users/kobyhuckabee/Desktop/TutorLab/DesktopApp/dist/TutorLab',
+   'EXECUTABLE')],)

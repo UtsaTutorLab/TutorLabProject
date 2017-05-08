@@ -1,0 +1,37 @@
+{% extends "ta_tutor/base.html" %}
+
+{% block head_title %}
+    {{studentID}} session | {{ block.super }}
+{% endblock head_title %}
+
+{% block page %}   
+<!-- WELCOME CONTAINER -->
+<div class="jumbotron text-center"><br><br>
+  <h1>Session In Progress</h1> 
+</div>
+
+<!-- NAV TABS CONTENT -->
+<div class="tab-content">
+  <div id="home" class="tab-pane fade in active">
+    <h3>Session Details</h3>
+    {% block timer %}
+    {% include "ta_tutor/includes/timer.html" %} 
+    <form action="{% url 'ta_tutor:inSession' %}" method='post' class='post-form'>
+      {% csrf_token %}
+      <div class="form-body" style="padding-left:25px">
+        <!--{{ form.as_p }}-->
+        <p>Name: {{ form.whole_name }}</p>
+        <p>Abc123:  {{ form.student }}</p>
+        <p>Class:  {{ form.classID }}</p><br>
+        <p>Duration of Session:</p>
+        <p id="duration">{{ form.duration }}</p>
+        <p>Take detailed notes as you go along.</p>
+        <p>{{ form.notes }}</p>
+      </div>
+      <input type='submit' name='submit' onclick="return nl2br();" value='End Session'>
+    </form>
+    {% endblock timer %}
+  </div>
+  <br><br>
+</div>
+{% endblock page %} 

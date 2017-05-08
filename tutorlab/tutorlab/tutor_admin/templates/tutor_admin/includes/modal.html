@@ -1,0 +1,454 @@
+{% block modal %}
+<!-- CREATE TUTOR MODAL -->
+<div class="modal fade" id="create_tutor">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <form id="create_tutor_form" action="create-tutor/" method="POST">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3>Create new Tutor</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="tutor-create-fail-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+				    <div class="alert alert-success" id="tutor-create-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                    <label style="margin-top: 10px;">Tutor Name</label>
+                    <input class="form-control" name="tutor-first-name" placeholder="First Name" style="margin-bottom:5px;">
+                    <input class="form-control" name="tutor-last-name" placeholder="Last Name">
+                    <label style="margin-top: 10px;">Tutor abc123</label>
+                    <input class="form-control" name="tutor-abc123">
+                    <label style="margin0top: 10px;">Tutor Type</label>
+                    <select class="form-control" name="tutor-type" placeholder="Type" style="margin-bottom:5px;">
+                        <option>CS</option>
+                        <option>MATLAB</option>
+                        <option>BOTH</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="create_tutor_btn" class="btn btn-primary" onclick="create_tutor()">submit</button>
+                </div>
+            </form>
+		</div>
+	</div>
+</div>
+
+<!-- CREATE TUTOR NOTIFICATION MODAL -->
+<div class="modal fade" id="create_notification">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <form id="send_notification_form" action="send-notification/" method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3>Create New Notification</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="invalid-notification-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+				    <div class="alert alert-success" id="success-notification-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                    <h4>Select the Tutor to send to</h4>
+                    <select class="form-control" multiple='multiple' name="tutor-list">
+                        <option>--Send to All--</option>
+                        {% for tutor in tutor_list %}
+                        <option>{{tutor}}</option>
+                        {% endfor %}
+                    </select>
+                    <small>Hold "Control" or "Command" on Mac to select multiple tutors</small>
+                    <h4>Message Title:</h4>
+                    <input class="form-control" name="title">
+                    <h4>Message:</h4>
+                    <textarea class="form-control" rows="5" id="message" name="message" style="resize:none;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="msg-submit-btn" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+		</div>
+	</div>
+</div>
+
+<!-- GENERATE TUTOR REPORT MODAL -->
+<div class="modal fade" id="generate_report">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <form id="generate_report_form" action="{% url 'tutor_admin:tutor_report' %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3>Generate a Tutor Report (pdf)</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="report-error-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+				    <div class="alert alert-success" id="report-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                    <h4>Select Tutors to include in report
+                        <small>hold command to select multiple tutors</small>
+                    </h4>
+                    <select class="form-control" multiple='multiple' name="tutor-report-list" id="tutor-report-list" style="margin-bottom:20px;">
+                        <option>--Include All--</option>
+                        {% for tutor in tutor_list %}
+                        <option>{{tutor}}</option>
+                        {% endfor %}
+                    </select>
+                    <h4>Select Terms to include in report
+                        <small>hold command to select multiple terms</small>
+                    </h4>
+                    <select class="form-control" multiple='multiple' name="term-report-list" id="term-report-list" style="margin-bottom:20px;">
+                        <option>--Include All--</option>
+                        {% for term in term_list %}
+                        <option>{{term}}</option>
+                        {% endfor %}
+                    </select>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="generate-report-btn" onclick="print_report();" class="btn btn-primary">Generate Report</button>
+                </div>
+            </form>
+		</div>
+	</div>
+</div>
+
+<!-- EDIT SURVEY QUESTIONS -->
+<div class="modal fade" id="edit_survey_questions">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3 class="text-center">Edit Survey Questions</h3>
+                <h5>Reminder: Each answer is scored out of 5 so questions must be formated accordingly.</h5>
+            </div>
+            <div class="modal-body" id="questions_div">
+                <div class="alert alert-danger" id="edit-questions-failed-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                <div class="alert alert-success" id="edit-questions-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                {% for question in question_list %}
+                <div id="question_{{forloop.counter}}_div">
+                    <label>Question {{forloop.counter}}</label>
+                    <input type="hidden" class="form-control" id="question_id{{forloop.counter}}" value="{{question.id}}" style="margin-bottom:15px;">
+                    <input class="form-control" id="question{{forloop.counter}}" value="{{question.question_text}}" style="margin-bottom:15px;" maxlength="200">
+                    <select class="form-control" id="question_scale" style="margin-bottom: 20px;">
+                        {% for choice in choice_list %}
+                            {% if question.scale_choice.id == choice.id %}
+                                <option selected value="{{choice.id}}">{{choice}}</option>
+                            {% else %}
+                                <option value="{{choice.id}}">{{choice}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success pull-left" onclick="toggle_range_questions()">Edit Range Values</a>
+                <button class="btn btn-primary" onclick="update_questions()">Submit</button>
+            </div>
+		</div>
+	</div>
+</div>
+
+<!-- EDIT QUESTION RANGE VALUE -->
+<div class="modal fade" id="edit_range_value">
+    <div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3 class="text-center">Edit Value Range</h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" id="edit-value-range-failed-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                <div class="alert alert-success" id="edit-value-range-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                <h4>Range List</h4>
+                <div class="list-group" id="my-range-value-list-group">
+                {% for choice in choice_list %}
+                    <a class="list-group-item" id="choice_list{{choice.id}}" >{{choice}}<span class="close" onclick="delete_range_value({{choice.id}})" style="margin-top: -3px">x</span></a>
+                {% endfor %}
+                </div>
+                <div class="row">
+                    <div class="col-lg-5" id="low_div">
+                        <input type="text" class="form-control" id="low_value" placeholder="Low Value">
+                    </div>
+                    <div class="col-lg-2">
+                        <h4 class="text-center">to</h4>
+                    </div>
+                    <div class="col-lg-5" id="high_div">
+                        <input type="text" class="form-control" id="high_value" placeholder="High Value">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" style="margin-top: 10px" onclick="add_range_value()">
+                    <span class="glyphicon glyphicon-plus"></span> Add Range
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="toggle_range_questions()">Back to Questions</button>
+            </div>
+		</div>
+    </div>
+</div>
+
+<!-- EDIT STUDENT ISSUE LIST -->
+<div class="modal fade" id="edit_issue_list">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <form id="edit_issue_list_form" action="#" method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3 class="text-center">Edit Common Student Issue List</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="edit-issue-list-failed-alert" role="alert" style="display:none; margin-bottom:5px;"></div>
+                    <div class="input-group" id="issue-input-group">
+                        <input type="text" id="issue_input" class="form-control" placeholder="Issue...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="add_issue()">Add</button>
+                        </span>
+                    </div>
+                    <hr>
+                    <div class="list-group" id="my-list-group" name="my-list-group">
+                    {% for issue in issue_list %}
+                        <a class="list-group-item" id="issue{{issue.id}}" maxlength="150">{{issue.issue}}
+                            <span class="close" onclick="delete_issue({{issue.id}})" style="margin-top: -3px">x</span>
+                        </a>
+                    {% endfor %}
+                    </div>
+                    <div class="alert alert-success" id="edit-issue-list-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                </div>
+            </form>
+		</div>
+	</div>
+</div>
+
+<!-- CREATE COUSTOM SURVEY QUESTION SET-->
+<div class="modal fade" id="create_question_set">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h2 class="text-center">Custom Question Sets</h2>
+            </div>
+            <div class="modal-body" >
+                <div class="alert alert-danger" id="custom-issue-failed-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                <div class="alert alert-success" id="custom-issue-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                <h4>Select the class to create set for</h4>
+                <select class="form-control" id="class-list" name="class-list" style="margin-bottom: 10px">
+                    <option value="" selected disabled>Please select class</option>
+                    {% for course in courses %}
+                        <option value="{{course.id}}">{{course}}</option>
+                    {% endfor %}
+                </select>
+                <div id="common-issue-div">
+                    <h4>List of common issue questions <small>Select questions you want to include</small></h4>
+                    <select class="form-control" id="issue-list-select" multiple="multiple" size="8">
+                       <!-- add options with js -->
+                    </select>
+                    <small>Hold "Control" or "Command" on Mac to select multiple tutors</small>
+                    <hr>
+                    <button class="btn btn-primary pull-right" id="add-to-set-btn" onclick="add_to_set()">Add to Set</button>
+                    <button class="btn btn-primary" id="custom-issue-btn" onclick="show_custom()">Create Custom Issue</button>
+                </div>
+                <div id="custom-issue-div" style="display: none">
+                    <h4>Create a custom issue or question for this class</h4>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="custom-issue-input" placeholder="Custom issue...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="">Add to Set</button>
+                        </span>
+                    </div>
+                    <div class="col-md-4"><hr style="height:2px; border:none; color:lightgray; background-color:lightgray;"></div>
+                    <div class="col-md-4"><h4 class="text-center">Or</h4></div>
+                    <div class="col-md-4"><hr style="height:2px; border:none; color:lightgray; background-color:lightgray;"></div>
+                    <button class="btn btn-primary btn-block" type="button" onclick="show_list()">Select from List</button>
+                </div>
+                <h4 style="margin-top: 30px" id="class-name"></h4>
+                <div class="list-group" id="my-issue-list-group">
+                        <!-- update issues with js -->
+                </div><!-- end list-group-div -->
+            </div><!-- end modal body -->
+		</div><!-- end modal content -->
+	</div><!-- end modal dialog -->
+</div><!-- end modal fade -->
+
+<!-- ADD/DELETE/EDIT TERMS -->
+<!-- EDIT TERMS -->
+<div class="modal fade" id="edit_terms">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3 class="text-center">Manage Terms</h3>
+            </div>
+            <div class="modal-body">         
+                <div class="container-fluid">
+                    <!-- ADD TERM -->
+                    <form id="add_term_form" action="add-term/" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h4>Add Term</h4>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-md-4">
+                                <input type="text" id="term_name" name="term_name" class="form-control" placeholder="Term Name">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="controls">
+                                    <div id="pick_start" class="input-group date">
+                                        <input type="text" name="start_date" id="start_date" class="form-control" placeholder="Start Date">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $("#pick_start").datepicker({format: 'mm/dd/yyyy',
+                                            showMeridian: true,
+                                            autoclose: true}).find('input').addClass("form-control");
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="pick_end" class="input-group date">
+                                    <input type="text" name="end_date" id="end_date" class="form-control" placeholder="End Date">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <script type="text/javascript">
+                                    $("#pick_end").datepicker({format: 'mm/dd/yyyy',
+                                        showMeridian: true,
+                                        autoclose: true}).find('input').addClass("form-control");
+                                </script>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-bottom:10px">
+                            <div class="col-md-2">
+                                <button class="btn btn-primary" type="submit"> Add Term </button>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="alert alert-danger" id="add-term-failed-alert" role="alert" style="display:none; margin-bottom:-20px;">Failed to add term</div>
+                                <div class="alert alert-success" id="add-term-success-alert" role="alert" style="display:none; margin-bottom:-20px;">Term successfully added</div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- DELETE TERM -->
+                    <form id="delete_term_form" action="delete-term/" method="POST">
+                    {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4>Delete Term</h4>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:10px">
+                            <div class="col-md-12">
+                                <div id="delete-term-div">
+                                    <select class="form-control"  name="delete-term-list" id="delete-term-list" style="margin-bottom:10px;">
+                                        {% for term in term_list %}
+                                            <option>{{term}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button class="btn btn-danger" type="submit">Delete Term</input>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="alert alert-danger" id="delete-term-failed-alert" role="alert" style="display:none; margin-bottom:-20px;"></div>
+                                <div class="alert alert-success" id="delete-term-success-alert" role="alert" style="display:none; margin-bottom:-20px;"></div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- EDIT TERM -->
+                    <form id="edit_term_form" action="edit-term/" method="POST">
+                    {% csrf_token %}
+                        <div class="row" style="padding-top:10px">
+                            <div class="col-md-4">
+                                <h4>Edit Terms</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="edit-term-div">
+                                    <select class="form-control"  name="edit-term-list" id="edit-term-list" style="margin-bottom:10px;">
+                                        {% for term in term_list %}
+                                            <option data-start="{{term.start}}" data-end="{{term.end}}">{{term.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="controls">
+                                    <div id="edit_start" class="input-group date">
+                                        <input type="text" name="edit_start_date" id="edit_start_date" class="form-control">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                    </div>
+                                    <script type="text/javascript">
+                                        $("#edit_start").datepicker({format: 'mm/dd/yyyy',
+                                            showMeridian: true,
+                                            autoclose: true}).find('input').addClass("form-control");
+                                            $("#edit_start").datepicker("setDate", "{{term_list.0.start}}");
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div id="edit_end" class="input-group date">
+                                    <input type="text" name="edit_end_date" id="edit_end_date" class="form-control">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                                <script type="text/javascript">
+                                    $("#edit_end").datepicker({format: 'mm/dd/yyyy',
+                                        showMeridian: true,
+                                        autoclose: true}).find('input').addClass("form-control");
+                                        $("#edit_end").datepicker("setDate", "{{term_list.0.end}}");
+                                </script>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top:10px">
+                            <div class="col-md-4">
+                                <button class="btn btn-primary" type="submit">Edit Term</button>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="alert alert-danger" id="edit-term-failed-alert" role="alert" style="display:none; margin-bottom:-5px;"></div>
+                                <div class="alert alert-success" id="edit-term-success-alert" role="alert" style="display:none; margin-bottom:-5px;"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD STUDENTS TO CLASS -->
+<div class="modal fade" id="add_students">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3 class="text-center">Add Students to Class</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Select the class to add Students to</h4>
+                <select class="form-control" id="import-student-class-list" style="margin-bottom: 25px">
+                    <option value="" selected disabled>Please select class</option>
+                    {% for course in courses %}
+                        <option value="{{course.id}}">{{course}}</option>
+                    {% endfor %}
+                </select>
+                <h4>Select the .xls file exported from Blackbord for</h4>
+                <div class="input-group" style="margin-bottom: 25px">
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary disabled" id="import-file-btn"> 
+                            Browse... <input id="xls-input-file" type="file" style="display: none;" single>
+                        </span>
+                    </label>
+                    <input type="text" id="xls-input-file-text" class="form-control" readonly>
+                </div>
+                <div class="alert alert-danger" id="add-student-to-class-failed-alert" role="alert" style="display:none; margin-bottom:5px;"></div>
+                <div class="alert alert-success" id="add-student-to-class-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+            </div><!-- end modal-body -->
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="submit-file-btn" onclick="upload_file()">Submit</button>
+            </div><!-- end modal-footer -->
+		</div><!-- end modal-content -->
+	</div><!-- end modal-dialog -->
+</div><!-- end modal fade -->
+{% endblock modal %}

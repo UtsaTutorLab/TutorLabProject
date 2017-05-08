@@ -1,0 +1,33 @@
+{% extends "instructor/base.html" %}
+{% block page %}
+<div class="jumbotron text-center">
+  <h1>Instructor</h1> 
+  <h3>Student Session Info</h3> 
+</div>
+<div class="container-fluid">
+  <div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">Student</div>
+      <div class="panel-body"> {{ session.student }} </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">Session Data</div>
+      <div class="panel-body">
+        <ul>
+        	<lu>Name: {{ session.student }} </lu><br>
+        	<lu>Session ID: {{ session.sessionID }} </lu><br>
+        	<lu>Class ID: {{ session.classID }} </lu><br>
+        	<lu>Duration: {{ session.duration }} </lu><br>
+        	<lu>Notes: {{ session.notes }} </lu><br><br>
+        	<lu>Tutored By: {{ session.tutor }} </lu>
+		</ul>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,4 @@
+Dear {{ username }},
+
+Thank you for choosing us to help you when you needed it, now tell us what you thought. Click on the link below and answer a few quick questions:
+http{% if secure %}s{% endif %}://{{ site.domain }}/survey/take-survey/{{ token }}

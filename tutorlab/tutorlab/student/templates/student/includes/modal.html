@@ -1,0 +1,35 @@
+{% block modal %}
+<!-- Are You Sure Delete Modal -->
+<div class="modal fade" id="delete_event_modal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3>Are you sure you want to delete this Appointment?</h3>
+                <input type="hidden" id="eventModalApptID">
+            </div>
+			<div class="modal-body">
+				<button type="submit" class="btn btn-primary" style="margig:20px" data-dismiss="modal">Keep Appointment</button>
+				<button type="submit" id="delete-event" class="btn btn-danger pull-right" data-dismiss="modal" onclick="delete_event()">Delete Appointment</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Are You Sure Delete Modal -->
+<div class="modal fade" id="delete_appt_modal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3>Are you sure you want to delete this Appointment?</h3>
+                <input type="hidden" id="apptModalApptID">
+			</div>
+			<div class="modal-body">
+				<button type="submit" class="btn btn-primary" style="margig:20px" data-dismiss="modal">Keep Appointment</button>
+				<button type="submit" class="btn btn-danger pull-right" data-dismiss="modal" onclick="delete_appt()">Delete Appointment</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

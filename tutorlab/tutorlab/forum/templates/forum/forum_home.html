@@ -1,0 +1,307 @@
+{% extends "forum/base.html" %} 
+{% load staticfiles %}
+{% load forumtags %} 
+{% block page %}
+<div class="jumbotron text-center" style="margin-top:50px">
+  <h1>Welcome to The Forum</h1> 
+  <p>This is where learning grows to the next level</p>
+</div>
+
+<div class="row search-field" style="margin: 0px 50px 20px;">
+    <div class="dropdown">
+        <input class="form-control text-center" id="forum-search" placeholder="Search forum" data-toggle="dropdown">
+        <ul class="dropdown-menu" id="search-results" style="width:100%">
+        </ul>
+    </div>
+</div>
+
+<div style="margin:0px 50px 20px;">
+  <!-- Nav tabs -->
+  <ul class="nav nav-pills nav-justified" role="pilllist" style="margin-bottom:10px;">
+    <li role="presentation" class="{{active_page|getactive:1}}"><a href="#pane1" aria-controls="home" role="pill" data-toggle="pill">Recent</a></li>
+    <li role="presentation" class="{{active_page|getactive:2}}"><a href="#pane2" aria-controls="profile" role="pill" data-toggle="pill">Popular</a></li>
+    <li role="presentation" class="{{active_page|getactive:3}}"><a href="#pane3" aria-controls="messages" role="pill" data-toggle="pill">Your Posts</a></li>
+    <li role="presentation" class="{{active_page|getactive:4}}"><a href="#pane4" aria-controls="messages" role="pill" data-toggle="pill">Bookmarked Posts</a></li> 
+ </ul>
+  <hr>
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <!-- RECENT POSTS TAB -->  
+    {% if active_page == 1 %}
+    <div role="tabpanel" class="tab-pane active" id="pane1">
+    {% else %}
+    <div role="tabpanel" class="tab-pane" id="pane1">
+    {% endif %}
+        <div class="row panel-row" style="margin:0px 0px 400px;">
+            {% if post_list %}
+                <nav aria-label="...">
+                    <ul class="pager" style="margin-top:0;">
+                        {% if post_list.has_previous %}
+                        <li class="previous"><a href="?recent-page={{ post_list.previous_page_number }}"><span aria-hidden="true">&larr;</span> Newer</a></li>
+                        {% endif %}
+                        {% if post_list.has_next %}
+                        <li class="next"><a href="?recent-page={{ post_list.next_page_number }}">Older<span aria-hidden="true">&rarr;</span></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% for post in post_list %}
+                    <a href="{% url 'forum:post_view' slug=post.slug id=post.id %}" onclick="increase_view_count({{post.id}})">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1 col-md-1 text-center" style="padding:0px; margin:-10px 5px 0 10px;">
+                                        <h3>{{post.vote_num}}</h3>
+                                        <h5>Likes</h5>
+                                    </div>
+                                    <div class="col-xs-11 col-md-11" style="margin-right:-20px"> 
+                                        <h4>{{post.title}}<small> - CS{{post.course_number}}</small></h4>
+                                        <h5>{{post|getgroup}}: {{post.user.first_name}} {{post.user.last_name}} - {{post.view_num}}<small> views</small>
+                                        | {{post.comment_num}}<small> comments</small>
+                                        | {{post.date_created|timesince}}<small> ago</small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+                <div class="text-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if post_list.has_previous %}
+                            <li>
+                                <a href="?recent-page={{ post_list.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for x in post_list.paginator.num_pages|getrange:post_list.number %}
+                                {% if x == post_list.number %}
+                                <li class="active"><a href="#" style="color:white;">{{x}}</a></li>
+                                {% else %}
+                                <li><a href="?recent-page={{x}}">{{x}}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if post_list.has_next %}
+                            <li>
+                                <a href="?recent-page={{ post_list.next_page_number }}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div><!-- end pagination -->
+            {% else %}
+                <h2>No Posts Yet!</h2>
+            {% endif %}
+        </div><!-- end panel-row -->
+    </div><!-- end pane1 -->
+    <!-- POPULAR POST TAB -->
+    {% if active_page == 2 %}
+    <div role="tabpanel" class="tab-pane active" id="pane2">
+    {% else %}
+    <div role="tabpanel" class="tab-pane" id="pane2">
+    {% endif %}
+        <div class="row panel-row" style="margin:0px 0px 400px;">
+           {% if popular_list %}
+                <nav aria-label="...">
+                    <ul class="pager" style="margin-top:0;">
+                        {% if popular_list.has_previous %}
+                        <li class="previous"><a href="?popular-page={{ popular_list.previous_page_number }}"><span aria-hidden="true">&larr;</span> More Popular</a></li>
+                        {% endif %}
+                        {% if popular_list.has_next %}
+                        <li class="next"><a href="?popular-page={{ popular_list.next_page_number }}">Least Popular <span aria-hidden="true">&rarr;</span></a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% for post in popular_list %}
+                    <a href="{% url 'forum:post_view' slug=post.slug id=post.id %}" onclick="increase_view_count({{post.id}})">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1 col-md-1 text-center" style="padding:0px; margin:-10px 5px 0 10px;">
+                                        <h3>{{post.vote_num}}</h3>
+                                        <h5>Likes</h5>
+                                    </div>
+                                    <div class="col-xs-11 col-md-11" style="margin-right:-20px"> 
+                                        <h4>{{post.title}}<small> - CS{{post.course_number}}</small></h4>
+                                        <h5>{{post|getgroup}}: {{post.user.first_name}} {{post.user.last_name}} - {{post.view_num}}<small> views</small>
+                                        | {{post.comment_num}}<small> comments</small>
+                                        | {{post.date_created|timesince}}<small> ago</small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+                <div class="text-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if popular_list.has_previous %}
+                            <li>
+                                <a href="?popular-page={{ popular_list.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for x in popular_list.paginator.num_pages|getrange:popular_list.number %}
+                                {% if x == popular_list.number %}
+                                <li class="active"><a href="#" style="color:white;">{{x}}</a></li>
+                                {% else %}
+                                <li><a href="?popular-page={{x}}">{{x}}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if popular_list.has_next %}
+                            <li>
+                                <a href="?popular-page={{ popular_list.next_page_number }}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div><!-- end pagination -->
+           {% else %}
+                <h2 class="text-center">No Popular posts yet!</h2>
+           {% endif %}
+        </div>
+    </div>
+    <!-- YOUR POST TAB -->
+    {% if active_page == 3 %}
+    <div role="tabpanel" class="tab-pane active" id="pane3">
+    {% else %}
+    <div role="tabpanel" class="tab-pane" id="pane3">
+    {% endif %}
+        <div class="row controls-row" style="margin:0px 0px 20px;">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="filter your posts">
+                <div class="input-group-btn">
+                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options <span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                    <li><a data-toggle="modal" data-target="#create-post">Create Post</a></li>
+                    <li><a href="#">Stuff</a></li>
+                    <li><a href="#">Other Stuff</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row panel-row" id="your-post-list" style="margin:0px 0px 400px;">
+            {% if past_list %}
+                {% for post in past_list %}
+                    <a href="{% url 'forum:post_view' slug=post.slug id=post.id %}" onclick="increase_view_count({{post.id}})">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1 col-md-1 text-center" style="padding:0px; margin:-10px 5px 0 10px;">
+                                        <h3>{{post.vote_num}}</h3>
+                                        <h5>Likes</h5>
+                                    </div>
+                                    <div class="col-xs-11 col-md-11" style="margin-right:-20px"> 
+                                        <h4>{{post.title}}<small> - CS{{post.course_number}}</small></h4>
+                                        <h5>{{post|getgroup}}: {{post.user.first_name}} {{post.user.last_name}} - {{post.view_num}}<small> views</small>
+                                        | {{post.comment_num}}<small> comments</small>
+                                        | {{post.date_created|timesince}}<small> ago</small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+                <div class="text-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if past_list.has_previous %}
+                            <li>
+                                <a href="?past-page={{ past_list.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for x in past_list.paginator.num_pages|getrange:past_list.number %}
+                                {% if x == past_list.number %}
+                                <li class="active"><a href="#" style="color:white;">{{x}}</a></li>
+                                {% else %}
+                                <li><a href="?past-page={{x}}">{{x}}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if past_list.has_next %}
+                            <li>
+                                <a href="?past-page={{ past_list.next_page_number }}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div><!-- end pagination -->
+            {% else %}
+                <div class="text-center">
+                    <h2 class="text-center">You have not made a post yet!</h2>
+                    <a class="btn btn-primary" data-toggle="modal" data-target="#create-post" style="color:white;">Create First Post</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- BOOKMARKS TAB -->
+    {% if active_page == 4 %}
+    <div role="tabpanel" class="tab-pane active" id="pane4">
+    {% else %}
+    <div role="tabpanel" class="tab-pane" id="pane4">
+    {% endif %}
+        <div class="row panel-row" style="margin:0px 50px 400px;">
+            {% if bookmark_list %}
+                {% for post in bookmark_list %}
+                    <a href="{% url 'forum:post_view' slug=post.slug id=post.id %}" onclick="increase_view_count({{post.id}})">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-1 col-md-1 text-center" style="padding:0px; margin:-10px 5px 0 10px;">
+                                        <h3>{{post.vote_num}}</h3>
+                                        <h5>Likes</h5>
+                                    </div>
+                                    <div class="col-xs-11 col-md-11" style="margin-right:-20px"> 
+                                        <h4>{{post.title}}<small> - CS{{post.course_number}}</small></h4>
+                                        <h5>{{post|getgroup}}: {{post.user.first_name}} {{post.user.last_name}} - {{post.view_num}}<small> views</small>
+                                        | {{post.comment_num}}<small> comments</small>
+                                        | {{post.date_created|timesince}}<small> ago</small></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a> 
+                {% endfor %}
+                <div class="text-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if bookmark_list.has_previous %}
+                            <li>
+                                <a href="?booked-page={{ bookmark_list.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for x in bookmark_list.paginator.num_pages|getrange:bookmark_list.number %}
+                                {% if x == bookmark_list.number %}
+                                <li class="active"><a href="#" style="color:white;">{{x}}</a></li>
+                                {% else %}
+                                <li><a href="?booked-page={{x}}">{{x}}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if bookmark_list.has_next %}
+                            <li>
+                                <a href="?booked-page={{ bookmark_list.next_page_number }}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div><!-- end pagination -->
+            {% else %}
+                    <h2 class="text-center">No bookmarks yet!</h2>
+            {% endif %}
+        </div>
+     </div>
+  </div>
+</div>
+{% endblock page %}

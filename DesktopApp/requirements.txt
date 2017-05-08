@@ -1,0 +1,4 @@
+PyInstaller == 3.2.1
+PyQt4 == 4.11.4
+requests == 2.12.1
+netifaces == 0.10.5

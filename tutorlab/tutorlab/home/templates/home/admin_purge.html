@@ -1,0 +1,142 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+      <meta name="description" content="">
+      <meta name="author" content="">
+
+      <title>{% block head_title %}Welcome to CS Tutor Lab!{% endblock head_title %}</title>
+
+      <!-- Bootstrap core CSS -->
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+      <!-- Custom styles for this template -->
+      <link href="{% static 'css/personal.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+      <div class="container">
+            <div class="panel panel-default" style="margin-top:200px">
+                  <div class="panel-heading">
+                        <h2> Purge courses, students, surveys, and student-tutor sessions </h2>
+                  </div>
+                  <div class="panel-body">
+                        <h4> Delete surveys and student-tutor session from selected term(s): </h4>
+                        <div id="term-list">
+                              <select id="terms" class="form-control" size="8" multiple="multiple">
+                                    <option selected value="None"> --None-- </option>
+                                    {% for term in terms %}
+                                          <option value="{{term.name}}">{{term.name}}</option>
+                                    {% endfor %}
+                              </select>
+                        </div>
+                        <h5 style="padding-top:10px"> Clicking the "Purge" button will delete all <strong>courses</strong> associated with instructors and <strong>students</strong> associated with those courses </h5>
+                        <div class="loader" id="loader" style="display:none"></div>
+                        <div class="alert alert-danger" id="purge-db-failed-alert" role="alert" style="display:none; margin-bottom:5px;"></div>
+                        <div class="alert alert-success" id="purge-db-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                        <button class="btn btn-primary pull-right" id="purge-btn" onclick="purge()">Purge</button>
+                        <a class="btn btn-danger pull-right" href="/admin" style="margin-right:20px">Back</a>
+                  </div>
+            </div>
+      </div>
+
+
+</body>
+<script>
+      // FILE UPLOAD SCRIPT IN ADD STUDENT MODAL
+      $(function () {
+            // We can attach the `fileselect` event to all file inputs on the page
+            $(document).on('change', ':file', function () {
+                  var input = $(this),
+                        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                  input.trigger('fileselect', [label]);
+            });
+
+            // We can watch for our custom `fileselect` event like this
+            $(document).ready(function () {
+                  $(':file').on('fileselect', function (event, label) {
+                        var input = $(this).parents('.input-group').find(':text');
+                        if (input.length) {
+                              input.val(label);
+                        }
+                        if (input.val().match(/.xls[x]*$/) != null || input.val().match(/.csv$/) != null) {
+                              $("#purge-btn").prop('disabled', false);
+                        } else {
+                              $("#purge-btn").prop('disabled', true);
+                        }
+                  });
+            });
+      });
+
+
+      // UPLOAD XLS FILE 
+      function purge() {
+            $("#purge-btn").prop('disabled', true);
+            $("#loader").css("display","block");
+      
+            var selectedTerms = $("#terms").val();
+            
+            $.ajax({
+                  url: '/admin_purge/',
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {'selectedTerms':selectedTerms}, 
+                  success: function (response) {
+                        if (response['bool-term'] == "true") {
+                              $("#term-list").load(document.URL + " #terms")
+                              $("#loader").css("display","none");
+                              $("#purge-db-failed-alert").fadeOut();
+                              $("#purge-btn").prop('disabled', true);
+                              $("#purge-db-success-alert").html(response['term-issue']).fadeIn();
+                              
+                              setTimeout(function () {
+                                    $("#purge-db-success-alert").fadeOut();
+                                    $("#purge-btn").prop('disabled', false);
+                              }, 5000);
+                        }
+                        if (response['bool-term'] == "false") {
+                              $("#loader").css("display","none");
+                              $("#purge-db-failed-alert").html(response['term-issue']).fadeIn();
+                              $("#purge-btn").prop('disabled', false);
+                        }
+                  }
+            });
+      }
+
+      // NEEDED FOR AJAX CSRFToken
+      function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                  var cookies = document.cookie.split(';');
+                  for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                              break;
+                        }
+                  }
+            }
+            return cookieValue;
+      }
+
+      // NEEDED FOR AJAX CSRFToken
+      $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                  if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                        // Only send the token to relative URLs i.e. locally.
+                        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                  }
+            }
+      });
+
+</script>
+
+</html>

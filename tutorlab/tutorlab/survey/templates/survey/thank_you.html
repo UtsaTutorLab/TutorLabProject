@@ -1,0 +1,13 @@
+{% extends "survey/base.html" %}
+
+{% block page %}
+    <div class="jumbotron text-center">
+        <h1>Thank You Again!</h1>
+        <p>Here's a cat video!</p>
+        <a class="btn btn-primary" href="{% url 'home:home' %}">Go to Home Page</a>
+    </div>
+    <div class="embed-responsive embed-responsive-16by9" style="margin: 20px;">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/-Wq35QXLiW8" frameborder="0" allowfullscreen></iframe>
+    </div>
+{% endblock page %}
+

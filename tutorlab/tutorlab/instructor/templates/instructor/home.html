@@ -1,0 +1,167 @@
+{% extends "instructor/base.html" %}
+{% block page %}
+<!-- WELCOME CONTAINER -->
+<div class="jumbotron text-center">
+  <h1>Instructor</h1> 
+  <h3>Welcome {{request.user.get_full_name}}</h3>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 style="margin:5px;">Courses</h3>
+          <div class="btn-group pull-right" style="margin-top:-35px;">
+            <button type="button" class="btn btn-default" data-toggle="dropdown" aria-expanded="false" style="border-top-right-radius:5px; border-bottom-right-radius:5px">
+              <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a data-toggle="modal" data-target="#add_students">
+                <span class="glyphicon glyphicon-plus" style="margin-right:5px;"></span>Add Students to Classes</a></li>
+              <li><a data-toggle="modal" data-target="#create_question_set">
+                <span class="glyphicon glyphicon-list-alt" style="margin-right:5px;"></span>Create Question Set</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="panel-body">
+          {% for course in courses %}
+          <a href="#" onclick="get_students('{{course.course_name}}', '{{course.id}}', '{{course.course_num}}')"> {{ course }} </a><br>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 id="student-title" style="margin:5px;">Students</h3>
+          <a class="btn btn-primary pull-right" href="{% url 'forum:forum' %}" style="margin:-35px 0px 0px;">Student Forum</a>
+        </div>
+        <div class="panel-body">
+          <ul id="student-list-ul" style="padding: 0px">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- EDIT STUDENT ISSUE LIST -->
+<div class="modal fade" id="edit_issue_list">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <form id="edit_issue_list_form" action="#" method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h3 class="text-center">Edit Common Student Issue List</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="edit-issue-list-failed-alert" role="alert" style="display:none; margin-bottom:5px;"></div>
+                    <div class="input-group" id="issue-input-group">
+                        <input type="text" id="issue_input" class="form-control" placeholder="Issue...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="add_issue()">Add</button>
+                        </span>
+                    </div>
+                    <hr>
+                    <div class="list-group" id="my-list-group" name="my-list-group">
+                    {% for issue in issue_list %}
+                        <a class="list-group-item" id="issue{{issue.id}}" maxlength="150">{{issue.issue}}
+                            <span class="close" onclick="delete_issue({{issue.id}})" style="margin-top: -3px">x</span>
+                        </a>
+                    {% endfor %}
+                    </div>
+                    <div class="alert alert-success" id="edit-issue-list-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                </div>
+            </form>
+		</div>
+	</div>
+</div>
+
+<!-- CREATE COUSTOM SURVEY QUESTION SET-->
+<div class="modal fade" id="create_question_set">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h2 class="text-center">Custom Question Sets</h2>
+            </div>
+            <div class="modal-body" >
+                <div class="alert alert-danger" id="custom-issue-failed-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                <div class="alert alert-success" id="custom-issue-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+                <h4>Select the class to create set for</h4>
+                <select class="form-control" id="class-list" name="class-list" style="margin-bottom: 10px">
+                    <option value="" selected disabled>Please select class</option>
+                    {% for course in courses %}
+                        <option value="{{course.id}}">{{course}}</option>
+                    {% endfor %}
+                </select>
+                <div id="common-issue-div">
+                    <h4>List of common issue questions <small>Select questions you want to include</small></h4>
+                    <select class="form-control" id="issue-list-select" multiple="multiple" size="8">
+                       <!-- add options with js -->
+                    </select>
+                    <small>Hold "Control" or "Command" on Mac to select multiple tutors</small>
+                    <hr>
+                    <button class="btn btn-primary pull-right" id="add-to-set-btn" onclick="add_to_set()">Add to Set</button>
+                    <button class="btn btn-primary" id="custom-issue-btn" onclick="show_custom()">Create Custom Issue</button>
+                </div>
+                <div id="custom-issue-div" style="display: none">
+                    <h4>Create a custom issue or question for this class</h4>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="custom-issue-input" placeholder="Custom issue...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="">Add to Set</button>
+                        </span>
+                    </div>
+                    <div class="col-md-4"><hr style="height:2px; border:none; color:lightgray; background-color:lightgray;"></div>
+                    <div class="col-md-4"><h4 class="text-center">Or</h4></div>
+                    <div class="col-md-4"><hr style="height:2px; border:none; color:lightgray; background-color:lightgray;"></div>
+                    <button class="btn btn-primary btn-block" type="button" onclick="show_list()">Select from List</button>
+                </div>
+                <h4 style="margin-top: 30px" id="class-name"></h4>
+                <div class="list-group" id="my-issue-list-group">
+                        <!-- update issues with js -->
+                </div><!-- end list-group-div -->
+            </div><!-- end modal body -->
+		</div><!-- end modal content -->
+	</div><!-- end modal dialog -->
+</div><!-- end modal fade -->
+
+<!-- ADD STUDENTS TO CLASS -->
+<div class="modal fade" id="add_students">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h3 class="text-center">Add Students to Class</h3>
+            </div>
+            <div class="modal-body">
+                <h4>Select the class to add Students to</h4>
+                <select class="form-control" id="import-student-class-list" style="margin-bottom: 25px">
+                    <option value="" selected disabled>Please select class</option>
+                    {% for course in courses %}
+                        <option value="{{course.id}}">{{course}}</option>
+                    {% endfor %}
+                </select>
+                <h4>Select the .xls file exported from Blackbord for</h4>
+                <div class="input-group" style="margin-bottom: 25px">
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary disabled" id="import-file-btn"> 
+                            Browse... <input id="xls-input-file" type="file" style="display: none;" single>
+                        </span>
+                    </label>
+                    <input type="text" id="xls-input-file-text" class="form-control" readonly>
+                </div>
+                <div class="alert alert-danger" id="add-student-to-class-failed-alert" role="alert" style="display:none; margin-bottom:5px;"></div>
+                <div class="alert alert-success" id="add-student-to-class-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+            </div><!-- end modal-body -->
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="submit-file-btn" onclick="upload_file()">Submit</button>
+            </div><!-- end modal-footer -->
+		</div><!-- end modal-content -->
+	</div><!-- end modal-dialog -->
+</div><!-- end modal fade -->
+{% endblock %}

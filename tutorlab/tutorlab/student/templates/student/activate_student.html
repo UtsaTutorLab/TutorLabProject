@@ -1,0 +1,24 @@
+{% extends "home/base.html" %}
+{% block page %}
+<div class="jumbotron text-center" style="margin-top:50px">
+  <h1>Welcome Student</h1> 
+  <p>You have activated your account, now set your passoword</p>
+</div>
+<div class="panel panel-default" style="max-width:700px; margin: 40px auto 100px;">
+  <div class="panel-heading">
+    <h3 class="panel-title">Set Password</h3>
+  </div>
+  <form id="set-password-form" action="" method="POST">
+    {% csrf_token %}
+    <div class="panel-body">
+        <div class="alert alert-danger" id="password-set-fail-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+		<div class="alert alert-success" id="password-set-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+        <label>Password</label>
+        <input class="form-control" type="password" name="password" style="margin-bottom:5px;">
+        <label>Confirm Password</label>
+        <input class="form-control" type="password" name="confirm-password" style="margin-bottom:5px;">
+        <button type="submit" class="btn btn-primary pull-right" onclick="activate_account()">submit</button>
+    </div>
+  </form>
+</div>
+{% endblock page %}

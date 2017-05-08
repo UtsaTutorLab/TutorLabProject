@@ -1,0 +1,118 @@
+{% extends "student/base.html" %}
+{% load staticfiles %}
+{% block page %}
+
+{% block addHead %}
+    {{ form.media }}
+{% endblock addHead %}
+
+{% block head_title %}
+    <title>Appointments</title>
+{% endblock head_title %}
+
+<div class="row" id="student-appt-row" style="margin-left:35px">
+    <div class="col-md-8">
+        <div class="panel panel-default" style="margin-top:50px;">
+            <div class="panel-heading">
+                <h3 class="panel-title">Set up an appointment</h3>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-danger" id="invalid-form" role="alert" style="display:none; margin-bottom: -10px;" >All fields are required</div>
+                <div class="alert alert-success" id="success-form" role="alert" style="display:none; margin-bottom: -10px;" >Appointment Sent</div>
+                <form id="create_appt" action="{% url 'student:create_appt' %}" method="post" class="post-form">
+                    {% csrf_token %}
+                    <div class="form-body">
+                        <fieldset>
+                            {% for field in form %}
+                                {% if forloop.counter == 1 %}
+                                    <div class="control-group">
+                                        {% comment %}<label class="control-label" style="margin-top:20px">{{ field.label }}</label> {% endcomment %}
+                                        <div class="controls">{{ field }}
+                                            {% if field.help_text %}
+                                                <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if forloop.counter > 1 %}
+                                    {% if field.errors %}
+                                        <div class="control-group error">
+                                            <label class="control-label" style="margin-top:20px">{{ field.label }}</label> 
+                                            <div class="controls">{{ field }}
+                                                <span class="help-inline">
+                                                    {% for error in  field.errors %}{{ error }}{% endfor %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="control-group">
+                                            <label class="control-label" style="margin-top:20px">{{ field.label }}</label> 
+                                            <div class="controls">{{ field }}
+                                                {% if field.help_text %}
+                                                    <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </fieldset>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" style="margin-top:20px">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div><!-- end col-md-8 -->
+    <div class="col-md-4">
+        <div class="alert alert-success" id="appt-success-alert" role="alert" style="display:none; margin-bottom: -40px;"></div>
+        <div class="alert alert-danger" id="appt-failed-alert" role="alert" style="display:none; margin-bottom: -40px;"></div>
+        <div class="panel panel-default" style="margin-top:50px;">
+            <div class="panel-heading">
+                <h3 class="panel-title">Requested Appointments</h3>
+            </div>
+             <div class="panel-body">
+                 <div class="panel-group" id="studentAccordion" role="tablist" aria-multiselectable="true">
+                  {% for appt in appts %}
+                    <div class="panel panel-default">
+                      <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ appt.pk }}" aria-expanded="true" aria-controls="collapseOne">
+                            {{appt.course_number }}
+                          </a>
+                        </h4>
+                      </div>
+                      <div id="{{ appt.pk }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        {% csrf_token %}
+                        <div class="panel-body">
+                          {% if appt.student_approved == True and appt.tutor_approved == True %}
+                            <p> Appointment Date - {{ appt.appt_date }} </p>
+                            <p> Comments: {{ appt.comments }}</p>
+                            <h5>Appointment Approved!</h5>
+                            <p>Your tutor is {{appt.tutor.tutor.first_name}} {{appt.tutor.tutor.last_name}}</p>
+                            <button type="button" class="btn btn-danger" onclick="show_delete_event_modal({{appt.id}})">Cancel Appointment</button>
+                          {% elif appt.student_approved == False and appt.tutor_approved == True %}
+                            <p> Appointment Date - {{ appt.old_appt_date }} </p>
+                            <p> Comments: {{ appt.comments }}</p>
+                            <h5>Your tutor needs to change your appointment date</h5>
+                            <p>New date: {{ appt.appt_date }}</p>
+                            <p>Would you like to confirm this date, request a new date or request a different tutor?</p>
+                            <button type="button" class="btn btn-primary" onclick="confirm_date({{appt.id}})">Confirm Date</button>
+                            <button type="button" class="btn btn-primary" onclick="request_new_tutor({{appt.id}})">Request New Tutor</button>
+                          {% else %}
+                            <p> Appointment Date - {{ appt.appt_date }} </p>
+                            <p> Comments: {{ appt.comments }}</p>
+                            <h5>Waiting approval...</h5>
+                            <button type="button" class="btn btn-danger" onclick="show_delete_appt_modal({{appt.id}})">Cancel Request</button>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div><!-- end col-md-4 -->
+</div><!-- end row -->
+{% endblock page %}

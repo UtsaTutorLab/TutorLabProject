@@ -1,0 +1,23 @@
+{% if post_results or comment_results %}
+    <ul class="results text-center" style="padding:0;">
+        {% if post_results %}
+            <u><h5>Post Results</h5></u>
+            {% for presult in post_results %}
+                <ul id="results" style="padding:0;">
+                    <a href="{% url 'forum:post_view' slug=presult.slug id=presult.id %}" onclick="increase_view_count({{presult.id}})">{{presult}}</a>
+                </ul>
+            {% endfor %}  
+        {% endif %}
+
+        {% if comment_results %}
+            <u><h5>Results in Comments</h5></u>
+            {% for cresult in comment_results %}
+                <ul id="results" style="padding:0;">
+                    <a href="{% url 'forum:post_view' slug=cresult.post.slug id=cresult.post.id %}#comment{{cresult.id}}" onclick="increase_view_count({{cresult.post.id}})">{{cresult.post}}</a>
+                </ul>
+            {% endfor %}
+        {% endif %}
+    </ul>
+{% else %}
+    <p class="text-center">No results found</p>
+{% endif %}

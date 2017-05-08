@@ -1,0 +1,10 @@
+{% extends "student/base.html" %}
+{% load staticfiles %}
+{% block page %}
+
+<div id="main" class="jumbotron text-center">
+  <h1>Welcome {{ student_info.student.first_name }}</h1> 
+  <p>You have logged in!</p> 
+</div>
+
+{% endblock page %}

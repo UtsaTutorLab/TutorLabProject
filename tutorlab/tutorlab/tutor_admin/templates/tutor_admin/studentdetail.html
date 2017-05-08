@@ -1,0 +1,32 @@
+{% extends "tutor_admin/base.html" %}
+{% block page %}
+<div class="jumbotron text-center">
+  <h1>Tutor Admin</h1>
+  <h3>Student Sessions</h3> 
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Student</div>
+        <div class="panel-body"> {{ student }} - {{session_list|length}} Sessions</div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Sessions</div>
+        <div class="panel-body">
+          <ul>
+            {% for session in session_list %}
+              <h5><a href="{{ session.id }}"> {{session.sessionID}}</a></h5>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+	

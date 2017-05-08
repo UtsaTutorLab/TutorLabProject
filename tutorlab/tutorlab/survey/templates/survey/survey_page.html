@@ -1,0 +1,57 @@
+{% extends "survey/base.html" %}
+
+{% block page %}
+    <div class="jumbotron text-center">
+        <h1>Thank You!</h1>
+        <p>Thanks for taking the time to let us know how we are doing!</p>
+    </div>
+    <div class="panel panel-default" style="margin: 10px 40px 20px;">
+      <div class="panel-heading">
+        <h3 class="panel-title">On a scale of 1 to 5 (1 being the lowest and 5 being the highest)</h3>
+      </div>
+      <div class="progress" style="margin: 10px;">
+        <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+      </div>
+      <div class="panel-body" style="margin-top: -20px;">
+        <form id="survey-submit-form" action="" method="POST">
+          {% csrf_token %}
+          <div class="text-center" id="question0" style="display:block">
+            <h1 id="survey-text" >Click the button below to start the survey</h1>
+            <button id="start-survey-btn" type="button" class="btn btn-lg btn-primary" onclick="count_score(0)">Start</button>
+          </div>
+          {% for question in question_set %}
+          <div id="question{{forloop.counter}}" style="display:none">
+            <h1 class="text-center" id="survey-text">{{ question }}</h1>
+            <div class="btn-group btn-group-justified" role="group" style="padding-top:25px;">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-lg btn-default" onclick="count_score(1)">1</button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-lg btn-default" onclick="count_score(2)">2</button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-lg btn-default" onclick="count_score(3)">3</button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-lg btn-default" onclick="count_score(4)">4</button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-lg btn-default" onclick="count_score(5)">5</button>
+              </div>
+            </div>
+          </div>
+          <input type="hidden" id="answer{{forloop.counter}}" name="answer{{forloop.counter}}" value="0">
+          {% endfor %}
+          <div id="question6" style="display:none">
+            <h1 id="survey-text" >Comments:</h1>
+            <textarea class="form-control" rows="5" id="comment" name="comment" style="resize:none;"></textarea>
+            <div class="alert alert-danger" id="invalid-form" role="alert" style="display:none; margin: 20px 0px 0px;"></div>
+            <button type="submit" class="btn btn-primary pull-right" style="margin-top: 15px;">Submit</button>
+          </div>
+          <input type="hidden" id="score_count" name="score_count" value="0">
+          <input type="hidden" id="click_count" name="click_count" value="0">
+          <input type="hidden" id="progress_bar" value="-20">
+        </form>
+      </div>
+    </div>
+{% endblock page %}

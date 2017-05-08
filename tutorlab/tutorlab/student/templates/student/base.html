@@ -1,0 +1,91 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+ <link rel="icon" src="{% static 'img/tutorlab_logo2.png' %}">
+
+    {% block head_title %} 
+        <title>Welcome {{ student_info.student.first_name }}</title>
+    {% endblock head_title %}
+    
+<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- Side-nav .js -->
+    <script src="{% static 'js/personal.js' %}"></script>
+
+<!-- PUSHER JS -->
+	{% load pusherable_tags %}
+	<script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+    <script src="{% static 'js/queue.js' %}"></script>
+      
+<!-- FullCalendar .js .css -->
+    <link rel='stylesheet' href="{% static 'fullcalendar/fullcalendar.css' %}" />
+    <script src="{% static 'fullcalendar/lib/moment.min.js' %}"></script>
+    <script src="{% static 'fullcalendar/fullcalendar.js' %}"></script>
+    <link href="/static/css/datetimepicker.css" type="text/css" media="all" rel="stylesheet"/>
+    <script type="text/javascript" src="/static/js/bootstrap-datetimepicker.js"></script>
+      
+<!-- Custom styles for this template -->
+    <link href="{% static 'css/personal.css' %}" rel="stylesheet">
+    <link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+
+
+    {% block addHead %} {% endblock addHead%}
+
+  </head>
+<!-- ================================================== -->
+  <body>
+      
+<!--HEADER NAVBAR-->
+    {% block header %}
+        {% include "home/includes/header.html" %}
+    {% endblock header %}
+
+    <!-- STUDENT MODALS -->
+	{% block modal %}
+        {% include "student/includes/modal.html" %}
+	{% endblock modal %}
+     
+<!-- SIDE NAV BAR -->
+<div class="container" style="margin-top:60px;">
+    <ul id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="openbtn" onclick="openNav()">&#9776;</a>
+        <!--<h2 class="title">Menu</h2>-->
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'home:profile' %}" style="padding-left:13px;"><span class="glyphicon glyphicon-home" aria-hidden="true" style="padding-right:17px"></span>Notifications</a>
+        <a href="{% url 'student:create_appt' %}"><span class="glyphicon glyphicon-calendar" aria-hidden="true" style="padding-right:15px"></span>Appointment</a>
+        <a href="{% url 'messenger:msg' label=request.user.username %}"><span class="glyphicon glyphicon-comment" aria-hidden="true" style="padding-right:15px"></span>Chat With Tutor</a>
+        <a href="{% url 'forum:forum' %}"><span class="glyphicon glyphicon-edit" aria-hidden="true" style="padding-right:15px"></span>Forum</a>
+        <a href="#"><span class="glyphicon glyphicon-option-vertical" aria-hidden="true" style="padding-right:15px"></span>More Later</a>
+    </ul>
+
+<!--PAGE CONTENT-->
+    {% block page %}
+
+    {% endblock page %}
+</div>
+
+<!--FOOTER BAR-->
+<!--
+    {% block footer %}
+      {% include "home/includes/footer.html" %}
+    {% endblock %}  
+-->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    {% comment %}<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>{% endcomment %}
+<!--================================================== -->
+    </body>
+</html>

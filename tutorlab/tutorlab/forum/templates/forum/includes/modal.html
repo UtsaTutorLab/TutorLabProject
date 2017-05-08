@@ -1,0 +1,32 @@
+{% block modal %}
+
+<div class="modal fade" id="create-post" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="create-new-post-form" action="ajax-create-post/" method="POST">
+        {% csrf_token %}
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title" id="myModalLabel">New Post</h3>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-danger" id="create-post-failed-alert" role="alert" style="display:none;"></div>
+			      <div class="alert alert-success" id="create-post-success-alert" role="alert" style="display:none;"></div>
+            <h4>Title</h4>
+            <input class="form-control" id="post_title" name ="post_title" style="margin-bottom:5px">
+            <h4>Course Number</h4>
+            <input class="form-control" name="post_course" style="margin-bottom:5px">
+            <h4>Post
+              <br><small>Surround code segments with &lt;code&gt; ... &lt;code&gt; brackets to format code nicely</small>
+            </h4>
+            <textarea class="form-control" rows="10" name="post_content" style="resize:none; margin-bottom:5px"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" onclick="create_post()">Post</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock modal %}

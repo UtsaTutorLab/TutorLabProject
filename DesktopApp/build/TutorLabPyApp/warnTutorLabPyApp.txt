@@ -1,0 +1,55 @@
+missing module named PySide - imported by /Users/kobyhuckabee/django-env/lib/python3.5/site-packages/PyInstaller/loader/rthooks/pyi_rth_qt4plugins.py
+missing module named pyimod03_importers - imported by /Users/kobyhuckabee/django-env/lib/python3.5/site-packages/PyInstaller/loader/rthooks/pyi_rth_pkgres.py
+runtime module named six.moves - imported by cryptography.x509.general_name, cryptography.hazmat.backends.openssl.decode_asn1, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named _winreg - imported by platform, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named java - imported by platform, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named 'java.lang' - imported by platform, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py, xml.sax._exceptions
+missing module named vms_lib - imported by platform, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named pkg_resources.extern.six - imported by pkg_resources.extern, pkg_resources, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named 'pkg_resources.extern.six.moves' - imported by pkg_resources, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py, pkg_resources._vendor.packaging.requirements
+missing module named pkg_resources.extern.packaging - imported by pkg_resources.extern, pkg_resources, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named multiprocessing.AuthenticationError - imported by multiprocessing, multiprocessing.connection, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named multiprocessing.BufferTooShort - imported by multiprocessing, multiprocessing.connection, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named multiprocessing.TimeoutError - imported by multiprocessing, multiprocessing.pool, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named multiprocessing.get_context - imported by multiprocessing, multiprocessing.pool, multiprocessing.managers, multiprocessing.sharedctypes, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named multiprocessing.get_start_method - imported by multiprocessing, multiprocessing.spawn, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named multiprocessing.set_start_method - imported by multiprocessing, multiprocessing.spawn, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named 'org.python' - imported by pickle, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py, xml.sax
+missing module named __main__ - imported by pkg_resources, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named 'pkg_resources.extern.pyparsing' - imported by pkg_resources._vendor.packaging.markers, pkg_resources._vendor.packaging.requirements
+missing module named __builtin__ - imported by pkg_resources._vendor.pyparsing
+missing module named certifi - imported by requests.certs, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named socks - imported by requests.packages.urllib3.contrib.socks, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named 'backports.ssl_match_hostname' - imported by urllib3.packages.ssl_match_hostname, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named 'urllib3.packages.six.moves' - imported by urllib3.exceptions, urllib3.connectionpool, urllib3.connection, urllib3.util.response, urllib3.request, urllib3.response, urllib3.poolmanager, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named chardet - imported by requests.packages, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named simplejson - imported by requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib.quote - imported by urllib, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib.urlencode - imported by urllib, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib.proxy_bypass - imported by urllib, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib.unquote_plus - imported by urllib, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib.quote_plus - imported by urllib, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib.unquote - imported by urllib, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib.getproxies - imported by urllib, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urlparse - imported by requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named urllib2 - imported by requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named cookielib - imported by requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named Cookie - imported by requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named StringIO - imported by requests.packages.urllib3.packages.six, urllib3.packages.six, six, requests.compat, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py, pkg_resources._vendor.six
+missing module named thread - imported by requests.packages.urllib3.packages.ordered_dict, urllib3.packages.ordered_dict, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named dummy_thread - imported by requests.packages.urllib3.packages.ordered_dict, urllib3.packages.ordered_dict, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named _abcoll - imported by requests.packages.urllib3.packages.ordered_dict, urllib3.packages.ordered_dict, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named backports - imported by requests.packages.urllib3.packages.ssl_match_hostname, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named Queue - imported by requests.packages.urllib3.connectionpool, urllib3.connectionpool, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named win32wnet - imported by uuid, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named netbios - imported by uuid, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named 'requests.packages.urllib3.packages.six.moves' - imported by requests.packages.urllib3.exceptions, requests.packages.urllib3.connectionpool, requests.packages.urllib3.connection, requests.packages.urllib3.util.response, requests.packages.urllib3.request, requests.packages.urllib3.response, requests.packages.urllib3.poolmanager, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+excluded module named _frozen_importlib - imported by importlib, importlib.abc, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named _frozen_importlib_external - imported by importlib._bootstrap, importlib, importlib.abc, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named winreg - imported by platform, mimetypes, urllib.request, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named org - imported by copy, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named nt - imported by os, ntpath, shutil, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named ce - imported by os, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named msvcrt - imported by subprocess, multiprocessing.spawn, multiprocessing.popen_spawn_win32, getpass, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named _winapi - imported by subprocess, multiprocessing.reduction, multiprocessing.connection, multiprocessing.heap, multiprocessing.popen_spawn_win32, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py
+missing module named _dummy_threading - imported by dummy_threading, /Users/kobyhuckabee/TutorLab/DesktopApp/TutorLabPyApp.py

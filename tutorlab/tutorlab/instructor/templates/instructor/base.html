@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load staticfiles %}
+  <title>Welcome Instructor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="{% static 'css/personal.css' %}" type = "text/css"/>
+
+  <script src="{% static 'js/instructor.js' %}"></script>
+  <script src="{% static 'js/personal.js' %}"></script>
+
+</head>
+
+<body>
+<!-- NAV BAR -->
+{% block header %}
+    {% include "home/includes/header.html" %}
+{% endblock %}
+    
+<!-- PAGE CONTENT -->
+{% block page %}
+
+{% endblock %}
+
+<!-- FOOTER -->
+{%  block footer %}
+    {% comment %}{% include "home/includes/footer.html" %}{% endcomment %}
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% extends "home/base.html" %}
+{% load staticfiles %}
+{% block page %}
+<!-- Create Account Form -->
+  <div class="container-fluid" align-self:center; style="margin-top: 100px;">
+    <div class="panel panel-default" style="background-color:lightgrey">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="text-align: center">Create New Student Account</h3>
+        </div>
+        <div class="panel-body">
+          <div class="alert alert-danger col-xs-12 col-md-offset-3 col-md-6" id="create-student-fail-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+		      <div class="alert alert-success col-xs-12 col-md-offset-3 col-md-6" id="create-student-success-alert" role="alert" style="display:none; margin-bottom:0px;"></div>
+          <form id="create-student-form" action="{% url 'student:create_student' %}" method="POST">{% csrf_token %}
+            <div class="row" style="padding-bottom: 10px;">
+              <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <input type="text" placeholder="First Name" name="first" class="form-control">
+              </div>
+            </div>
+            <div class="row" style="padding-bottom: 10px;">
+              <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <input type="text" placeholder="Last Name" name="last" class="form-control">
+              </div>
+            </div>
+            <div class="row" style="padding-bottom: 10px;">
+              <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <input type="text" placeholder="Student abc123" name="abc123" class="form-control">
+              </div>
+            </div>
+            {% comment %}<div class="row" style="padding-bottom: 10px;">
+              <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <input type="password" placeholder="Password" name="password" class="form-control">
+              </div>
+            </div>{% endcomment %}
+            <div class="row">
+              <div class="col-xs-12 col-md-offset-3 col-md-6" style="padding-bottom: 10px;">
+                <input type="text" placeholder="Prefered Email" name="email" class="form-control">
+              </div>
+              <div class="col-xs-12">
+                <p style="text-align: center">* We would appreciate you completing a short survey we send to your email to help let us know how the tutors are doing</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <button class="btn btn-success pull-right" type="submit" id="create-student-btn">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+{% endblock page %}

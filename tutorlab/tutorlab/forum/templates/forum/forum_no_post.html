@@ -1,0 +1,9 @@
+{% extends "forum/base.html" %} 
+{% load staticfiles %} 
+{% block page %}
+<div class="jumbotron text-center" style="margin-top:50px">
+  <h1>The Forum</h1> 
+  <p>It appears the post you are looking for does not exists</p>
+  <a class="btn btn-default" href="{% url 'forum:forum' %}"><span class="glyphicon glyphicon-chevron-left"></span>Back Home</a>
+</div>
+{% endblock page %}

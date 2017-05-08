@@ -1,0 +1,123 @@
+{% extends "forum/base.html" %} 
+{% load staticfiles %} 
+{% load forumtags %}
+{% block page %}
+<div class="jumbotron text-center" style="margin-top:50px">
+  <h1>The Forum</h1> 
+  <p>This is where learning grows to the next level</p>
+</div>
+<div class="row post-row" id="post-view" style="margin:0px 25px 25px;">
+    <a class="btn btn-default" href="{% url 'forum:forum' %}" style="margin-bottom:10px; margin-top:-20px;"><span class="glyphicon glyphicon-chevron-left"></span>Back Home</a>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="container-fluid">
+                <div class="row post-content">
+                    <div class="col-xs-1 col-md-1 text-center" id="like">
+                        {% if vote %}
+                            {% if vote.value == 1 %}
+                                <button class="glyphicon glyphicon-chevron-up" id="like-button-up" value="{{vote.value}}" onclick="uplikepost(1, {{post.id}})" style="color:rgb(215,0,0)"></button>
+                                <h3 style="padding:8px; margin-top:10px;"><span id="vote-value" value="{{post.vote_num}}">{{post.vote_num}}</span></h3>
+                                <button class="glyphicon glyphicon-chevron-down" id="like-button-down" value="0" onclick="downlikepost(-1, {{post.id}})"></button>
+                            {% else %}
+                                <button class="glyphicon glyphicon-chevron-up" id="like-button-up" value="0" onclick="uplikepost(1, {{post.id}})"></button>
+                                <h3 style="padding:8px; margin-top:10px;"><span id="vote-value" value="{{post.vote_num}}">{{post.vote_num}}</span></h3>
+                                <button class="glyphicon glyphicon-chevron-down" id="like-button-down" value="{{vote.value}}" onclick="downlikepost(-1, {{post.id}})" style="color:rgb(215,0,0)"></button>                            
+                            {% endif %}
+                        {% else %}
+                            <button class="glyphicon glyphicon-chevron-up" id="like-button-up" value="0" onclick="uplikepost(1, {{post.id}})"></button>
+                            <h3 style="padding:8px; margin-top:10px;"><span id="vote-value" value="{{post.vote_num}}">{{post.vote_num}}</span></h3>
+                            <button class="glyphicon glyphicon-chevron-down" id="like-button-down" value="0" onclick="downlikepost(-1, {{post.id}})"></button>
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-11 col-md-11" id="post">
+                        {% if flag == 1 %}
+                            <button class="btn btn-default pull-right" id="flag_btn" onclick="postflag({{post.id}})" value="{{flag}}" style="margin:10px 5px; color:rgb(204, 11, 4);"><span class="glyphicon glyphicon-flag"></span></button>
+                        {% else %}
+                            <button class="btn btn-default pull-right" id="flag_btn" onclick="postflag({{post.id}})" value="{{flag}}" style="margin:10px 5px; color:rgb(51, 51, 51);"><span class="glyphicon glyphicon-flag"></span></button>
+                        {% endif %}
+                        {% if bookmark == 1 %}<!-- bookmarked -->
+                            <button class="btn btn-default pull-right" id="bookmark_btn" onclick="bookmark({{post.id}})" value="{{bookmark}}" style="margin-top:10px; color:rgb(204, 11, 4);"><span class="glyphicon glyphicon-bookmark"></span></button>
+                        {% else %}<!-- not bookmarked -->
+                            <button class="btn btn-default pull-right" id="bookmark_btn" onclick="bookmark({{post.id}})" value="{{bookmark}}" style="margin-top:10px; color:rgb(51, 51, 51);"><span class="glyphicon glyphicon-bookmark"></span></button>
+                        {% endif %}
+                        <h4>{{post|getgroup}}: <small>{{post.user.first_name}} {{post.user.last_name}}</small></h4>
+                        <h5 style="margin-top:10px">CS <small>{{post.course_number}}</small></h5>
+                        <h4 style="margin-top:20px">{{post.title}}</h4>
+                        {% for str in post.message|messageformat %}
+                            {% if forloop.counter0|mod:2 == 0 %}
+                                <p>{{str|linebreaks}}</p>
+                            {% else %}
+                                <pre><code>{{str}}</code></pre>
+                            {% endif %}
+                        {% endfor %}
+                        <h5 class="pull-right" id="post-stats" style="margin-top:30px">{{post.view_num}}<small> views</small> | {{post.comment_num}}<small> comments</small> | {{post.date_created}}</h5>
+                    </div>
+                </div>
+            </div>
+            <hr style="margin-top:20px;">
+            <div class="text-center">
+                <ul class="nav nav-pills nav-center">
+                    <li role="presentation" class="{{comment_filter|getactive:'date_created'}}"><a href="?comment-filter=date_created">Oldest</a></li>
+                    <li role="presentation" class="{{comment_filter|getactive:'-vote_num'}}"><a href="?comment-filter=-vote_num">Votes</a></li>
+                    <li role="presentation" class="{{comment_filter|getactive:'-date_created'}}"><a href="?comment-filter=-date_created">Recent</a></li>
+                </ul>
+            </div>
+            <div id="comments-div">
+                {% if comments %}
+                    {% for comment in comments %}
+                        <div class="row" id="comment{{comment.id}}" name="comment{{comment.id}}">
+                            <hr>
+                            <div class="col-xs-1 col-md-1 text-center" style="margin-top:10px;">
+                                {% if voted_comments %}
+                                    {% if voted_comments|likebuttonformat:comment.id == 1 %}
+                                        <button class="glyphicon glyphicon-chevron-up" id="like-button-up-{{comment.id}}" value="1" onclick="uplikecomment(1, {{comment.id}})" style="color:rgb(215,0,0)"></button>
+                                        <h3 style="padding:8px; margin-top:10px;"><span id="vote-value-{{comment.id}}" value={{comment.vote_num}}>{{comment.vote_num}}</span></h3>
+                                        <button class="glyphicon glyphicon-chevron-down" id="like-button-down-{{comment.id}}" value="0" onclick="downlikecomment(-1, {{comment.id}})"></button>
+                                    {% elif voted_comments|likebuttonformat:comment.id == -1 %}
+                                        <button class="glyphicon glyphicon-chevron-up" id="like-button-up-{{comment.id}}" value="0" onclick="uplikecomment(1, {{comment.id}})"></button>
+                                        <h3 style="padding:8px; margin-top:10px;"><span id="vote-value-{{comment.id}}" value={{comment.vote_num}}>{{comment.vote_num}}</span></h3>
+                                        <button class="glyphicon glyphicon-chevron-down" id="like-button-down-{{comment.id}}" value="-1" onclick="downlikecomment(-1, {{comment.id}})" style="color:rgb(215,0,0)"></button>
+                                    {% else %}
+                                        <button class="glyphicon glyphicon-chevron-up" id="like-button-up-{{comment.id}}" value="0" onclick="uplikecomment(1, {{comment.id}})"></button>
+                                        <h3 style="padding:8px; margin-top:10px;"><span id="vote-value-{{comment.id}}" value={{comment.vote_num}}>{{comment.vote_num}}</span></h3>
+                                        <button class="glyphicon glyphicon-chevron-down" id="like-button-down-{{comment.id}}" value="0" onclick="downlikecomment(-1, {{comment.id}})"></button>
+                                    {% endif %}
+                                {% else %}
+                                    <button class="glyphicon glyphicon-chevron-up" id="like-button-up-{{comment.id}}" value="0" onclick="uplikecomment(1, {{comment.id}})"></button>
+                                    <h3 style="padding:8px; margin-top:10px;"><span id="vote-value-{{comment.id}}" value={{comment.vote_num}}>{{comment.vote_num}}</span></h3>
+                                    <button class="glyphicon glyphicon-chevron-down" id="like-button-down-{{comment.id}}" value="0" onclick="downlikecomment(-1, {{comment.id}})"></button>
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-11 col-md-11">
+                                {% for str in comment.message|messageformat %}
+                                    {% if forloop.counter0|mod:2 == 0 %}
+                                        <p>{{str|linebreaks}}</p>
+                                    {% else %}
+                                        <pre><code>{{str}}</code></pre>
+                                    {% endif %}
+                                {% endfor %}
+                                <h5><small>comment by: </small>{{comment.user.first_name}} {{comment.user.last_name}}<small> {{comment.date_created|timesince}} ago</small></h5>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h4 class="text-center">No Comments Yet</h4>
+                {% endif %}
+                <hr style="margin-top:50px;">
+                <div class="alert alert-danger" id="create-comment-failed-alert" role="alert" style="display:none;"></div>
+                <h3>Comment: </h3>
+                <h5><small>Surround code segments with &lt;code&gt; ... &lt;code&gt; brackets to format code nicely</small></h5>   
+                <div id="create-new-comment-form-div" style="display:block;">
+                    <form id="create-new-comment-form" action="ajax-create-comment/" method="POST">
+                        {% csrf_token %}
+                        <textarea class="form-control comment-expand" type="text" id="comment_message" name="comment_message" placeholder="What are your thoughts?"></textarea>
+                        <input type="hidden" name="post_id" value="{{post.id}}">
+                        <button type="submit" class="btn btn-primary pull-right" id="comment-submit-btn" style="display:none; margin-top:10px;">Comment</button>
+                    </form>
+                </div>
+                <div class="alert alert-success" id="create-comment-success-alert" role="alert" style="display:none;"></div>
+            </div><!-- end comments-div -->
+        </div><!-- end panel-body -->
+    </div><!-- end panel-default -->
+</div><!-- end post-row -->
+{% endblock page %}

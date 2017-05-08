@@ -1,0 +1,168 @@
+{% extends "ta_tutor/base.html" %} 
+{% load staticfiles %} 
+
+{% block head_title %} Welcome {{tutor_info.tutor.first_name}} | {{ block.super }} {% endblock head_title %} 
+
+{% block fullCalendar %}
+<!-- FULLCALENDAR JS/CSS -->
+<link rel='stylesheet' href="{% static 'fullcalendar/fullcalendar.css' %}" />
+<script src="{% static 'fullcalendar/lib/moment.min.js' %}"></script>
+<script src="{% static 'fullcalendar/fullcalendar.js' %}"></script> 
+<script src="{% static 'js/full-calendar.js' %}"></script>
+<link href="/static/css/datetimepicker.css" type="text/css" media="all" rel="stylesheet"/>
+<script type="text/javascript" src="/static/js/bootstrap-datetimepicker.js"></script>
+{% endblock fullCalendar %} 
+
+{% block page %}
+<!-- MODAL CONTENT -->
+{% block modal %} {% include "ta_tutor/includes/modal.html" %} {% endblock modal %}
+
+<!-- STUDENT QUEUE -->
+<div class="container" style="margin-left: 50px; margin-top:50px;">
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="openbtn" onclick="openNav()">&#9776;</a>
+    <h3 style="font-size:23px; right:50px" class="title">Student Queue</h3>
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div id="queue">
+    <ul class="nav nav-pills nav-stacked">
+      {% comment %}<button class="btn btn-primary" style="word-wrap: break-word" onclick="update_queue();"> Refresh Queue </button>{% endcomment %}
+      {% if student_queue %}
+        {% for student in student_queue %} 
+          {% if student.abc123 == student_queue.0.abc123 and student.inSession == 0 %}
+            <li role="presentation" class="active" id="upnext" data-wholename="{{student.whole_name}}" data-nextstudent="{{ student.abc123 }}" data-nextclass="{{ student.classID }}">
+              {% if student.isChat == 1 %}
+                <a id="nextup" href='{% url "messenger:room" token=student.chat_token %}' style="font-size:24px">&nbsp 1 &nbsp{{ student.whole_name }} <br>&nbsp&nbsp&nbsp&nbsp&nbsp Chat Request</a></li>
+              {% elif student.isChat == 0 %}
+                <a id="nextup" href="#" onclick="queue_formfill();" style="font-size:24px">&nbsp1  &nbsp {{ student.whole_name }}<br>
+                                                                                            &nbsp&nbsp&nbsp&nbsp&nbsp {{ student.className}}<br>
+                                                                                            &nbsp&nbsp&nbsp&nbsp&nbsp {{ student.question}}<br>
+                                                                                            &nbsp&nbsp&nbsp&nbsp&nbsp Chair: {{ student.chair }}</a></li>              
+              {% endif %}
+            {% elif student.inSession == 0 %}
+            <li id="next_nextup" role="presentation"><a style="font-size:24px">&nbsp&nbsp{{ forloop.counter }} &nbsp{{ student.whole_name }}</a></li>
+            {% elif student_queue.0.inSession == 1 %}
+            <p align="center">Student is in session</p>
+          {% endif %} 
+        {% endfor %} 
+      {% else %}
+        <p align="center">No students up next</p>
+      {% endif %}
+    </ul>
+    </div>
+  </div>
+  <!-- TUTOR PROFILE INFO CONTAINER -->
+    <h1>{{ tutor_info.tutor.first_name }} {{ tutor_info.tutor.last_name }}
+      <small>{{ tutor_info.classification }} CS Tutor</small>
+    </h1>
+    <ul id="tutorTabs" class="nav nav-tabs" >
+      <li class="notification active"><a data-toggle="tab" href="#notifications" onclick="viewed({{tutor_info.id}})">Notifications
+        {% if notification_num > 0 %}
+          <span class="badge" id="notification_num" style="margin-left:10px">{{ notification_num }}</span></a></li>
+        {% else %}
+          <span class="badge" style="margin-left:10px"></span></a></li>
+        {% endif %}
+      <li><a data-toggle="tab" id='appt_schedule' href="#schedule">Schedule
+        {% if request_num > 0 %}
+          <span class="badge" style="margin-left:10px">{{ request_num }}</span></a></li>
+        {% else %}
+          <span class="badge" style="margin-left:10px"></span></a></li>
+        {% endif %}
+      <li><a data-toggle="tab" href="#session">Session</a></li>
+      <li><a data-toggle="tab" href="#forum">Forum</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="notifications" class="tab-pane fade in active">
+        <!-- dynamically call name and info for tutors -->
+        <h3>Notifications</h3>
+        <div class="alert alert-danger" id="invalid-alert" role="alert" style="display:none; margin-bottom:50px; margin-top:50px;"></div>
+				<div class="alert alert-success" id="success-alert" role="alert" style="display:none; margin-bottom:50px; margin-top:50px;"></div>
+        {% for note in notifications %}
+        <div class="panel panel-default" id="notify{{note.id}}">
+          <div class="panel-body notification-panel">
+            <a class="glyphicon glyphicon-remove" onclick="delete_notification({{note.id}})"></a>
+            <h4>{{ note.message_title }} <small>{{ note.send_date }}</small></h4>
+            <p>{{ note.message_content }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <!-- END HOME TAB -->
+      <div id="session" class="tab-pane fade">
+        <h3>Start Tutoring Session</h3>
+        {% include "ta_tutor/includes/timer.html" %}
+        <form id="session_form" action="{% url 'ta_tutor:start_session' %}" method='post'>
+          {% csrf_token %}
+          <h5>Enter Student Name</h5>
+          <div class="form-group">
+            <input type="text" placeholder="Student name" id='session-student-name' name='session-student-name' class="form-control" style="min-width: 300px">
+          </div>
+          <h5>Enter Student abc123</h5>
+          <div class="form-group">
+            <input type="text" placeholder="abc123" id='studentID' name='studentID' class="form-control" style="min-width: 300px">
+          </div>
+          <h5>Select course<h5>
+          <div class="form-group">
+            {% comment %}<input type="" placeholder="ex. 4593.01" id='class' name='class' class="form-control">{% endcomment %}
+            <select id='class' name='class' form='session_form'>
+              {% for course in course_list %}
+              <option value={{course}}>{{course}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button id="start" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span> Start Session</button>
+        </form>
+      </div>
+      <!-- END SESSION TAB -->
+      <div id="schedule" class="tab-pane fade">
+        <div class="row" id="tutor-calendar-row">
+          <!-- Calendar -->
+          <div class="col-md-8">
+            <h3>Appointment Calendar and Requests</h3>
+            <div id='calendar'></div>
+          </div>
+          <!-- end Calendar -->
+          <!-- hidden var holding calendar_events from views -->
+          {% comment %}<input type="hidden" id="events" name="variable" value="{{ calendar_events }}">{% endcomment %}
+          <div class="col-md-4"><!-- Appt Queue -->
+            <div class="panel panel-default" style="margin-top:56px">
+              <div class="panel-heading">
+                <h3 class="panel-title">Appointment Requests</h3>
+              </div>
+              <div class="panel-body">
+                <div class="panel-group" id="tutorAccordion" role="tablist" aria-multiselectable="true">
+                  {% for appt in requested_appts %}
+                      <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                          <h4 class="panel-title">
+                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ appt.pk }}" aria-expanded="true" aria-controls="collapseOne">
+                              {{ appt.student.first_name }} in {{appt.course_number }}
+                            </a>
+                          </h4>
+                        </div>
+                        <div id="{{ appt.pk }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                          <div class="panel-body">
+                            <p> Appointment Date - {{ appt.appt_date }} </p>
+                            <p> Comments: {{ appt.comments }}</p>
+                            <p>Did you want to accept this appointment date and time?</p>
+                            <button type="submit" class="btn btn-primary" style="margin-right:auto" onclick="add_event({{ appt.pk }})">Yes</button>
+                            <button type="button"class="btn btn-danger" style="margin-left:auto" data-toggle="collapse" data-parent="#accordion" href="#{{ appt.pk }}">No</button>
+                          </div>
+                        </div>
+                      </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div><!-- end Appt Queue -->
+        </div>
+      </div>
+      <div id="forum" class="tab-pane fade text-center">
+        <h3>Tutor Forum Board</h3>
+        <a class="btn btn-primary" href="{% url 'forum:forum' %}">Go To Forum</a>
+      </div>
+      <!-- END SCHEDULE TAB -->
+    </div>
+    <!-- END TAB CONTENT -->
+  </div>
+  <!-- END CONTAINER -->
+{% endblock page %}
