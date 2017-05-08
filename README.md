@@ -52,7 +52,10 @@ If any errors occur follow the instructions given by the error codes.
 * [Pusher](https://pusher.com/docs) - A live notification framework for websites
 * [Service_Identity](https://github.com/pyca/service_identity) -  A tool for verifying whether a certificate is valid for the intended purposes
 
-## Authors
+## Idea For Project
+* **Larry Clark** - Professor at The University of Texas at San Antonio
+
+## Code Authors
 
 * [**Koby Huckabee**](https://github.com/AceTugboat) - Project Leader / Developer
 * [**Joseph Martinez**](https://github.com/jsmart93) - Architect Liaison/ Developer / UX Designer
@@ -60,6 +63,24 @@ If any errors occur follow the instructions given by the error codes.
 See also the list of [contributors](https://github.com/AceTugboat/TutorLab/graphs/contributors) who participated in this project.
 
 ## ChangeLog:
+
+### **v 1.0**
+
+*Website major updtes*
++ Admin can now upload all students, instructors, and courses through .xls spreadsheet
++ Admin can purge the database of past semester students, and courses
++ Admin can modify instructor statis as Tutor Admin
++ Tutor Admin can create/delete tutors
++ Tutor Admin can print out report of surveys by semester and tutor
++ Instructors can make custom issue sets per class for desktop app
++ see more in documents...
+
+*Desktop major updates*
++ Pulls students enrolled classes based on admin import
++ Pulls custom issue set for class if created by instructor
++ Live updates via websockets
++ Gets and Sends survey information to site
++ see more in documents...
 
 ### **v 0.9**
 
